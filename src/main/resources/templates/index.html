@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${nomeSistema}">Inventário TI</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033}body{margin:0;background:#f3f6fb}header{background:#123b70;color:#fff;padding:1.25rem max(1rem,calc((100% - 960px)/2))}main{max-width:960px;margin:2rem auto;padding:0 1rem}.card{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:0 4px 18px #15294b12}.muted{color:#596579}.pill{display:inline-block;padding:.3rem .7rem;border-radius:999px;background:#e1f3e9;color:#17643a;font-size:.85rem}
+  </style>
+</head>
+<body><header><strong>Inventário TI</strong></header><main><section class="card"><span class="pill">Projeto inicial</span><h1 th:text="${nomeSistema}">Inventário TI</h1><p th:text="${mensagem}">Projeto iniciado.</p><p class="muted">O cadastro de equipamentos, as pesquisas e a exportação CSV serão implementados nas próximas etapas.</p></section></main></body>
+</html>
