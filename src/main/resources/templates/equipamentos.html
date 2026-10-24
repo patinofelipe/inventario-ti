@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Equipamentos | Inventário TI</title>
+
+    <style>
+        :root {
+            --azul: #1565c0;
+            --azul-escuro: #0d47a1;
+            --azul-claro: #eaf3ff;
+            --vermelho: #c62828;
+            --vermelho-claro: #ffebee;
+            --verde: #18794e;
+            --verde-claro: #e8f5e9;
+            --cinza: #64748b;
+            --fundo: #f4f7fb;
+            --borda: #dce3ec;
+            --texto: #1e293b;
+            --branco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: var(--azul-escuro);
+            font-size: 28px;
+        }
+
+        .subtitulo {
+            margin: 0;
+            color: var(--cinza);
+        }
+
+        .painel {
+            margin-bottom: 22px;
+            padding: 22px;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .painel h2 {
+            margin: 0 0 18px;
+            font-size: 18px;
+        }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo label {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            padding: 11px 12px;
+            border: 1px solid var(--borda);
+            border-radius: 7px;
+            background: #fff;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: var(--azul);
+        }
+
+        .acoes-filtro {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .botao {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .botao:hover {
+            transform: translateY(-1px);
+        }
+
+        .botao-principal {
+            color: white;
+            background: var(--azul);
+        }
+
+        .botao-principal:hover {
+            background: var(--azul-escuro);
+        }
+
+        .botao-secundario {
+            color: var(--texto);
+            background: #e8edf4;
+        }
+
+        .botao-secundario:hover {
+            background: #d8e0eb;
+        }
+
+        .botao-editar {
+            color: white;
+            background: var(--azul);
+        }
+
+        .botao-editar:hover {
+            background: var(--azul-escuro);
+        }
+
+        .botao-excluir {
+            color: white;
+            background: var(--vermelho);
+        }
+
+        .botao-excluir:hover {
+            background: #8e0000;
+        }
+
+        .mensagem {
+            margin-bottom: 18px;
+            padding: 13px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sucesso {
+            color: var(--verde);
+            background: var(--verde-claro);
+            border: 1px solid #a5d6a7;
+        }
+
+        .erroGeral {
+            color: var(--vermelho);
+            background: var(--vermelho-claro);
+            border: 1px solid #ef9a9a;
+        }
+
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        thead {
+            color: white;
+            background: var(--azul-escuro);
+        }
+
+        th,
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid var(--borda);
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        tbody tr:hover {
+            background: #f0f6ff;
+        }
+
+        .acoes-linha {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-excluir {
+            display: inline;
+            margin: 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: var(--azul-claro);
+            color: var(--azul-escuro);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .vazio {
+            padding: 28px;
+            color: var(--cinza);
+            text-align: center;
+        }
+
+        .rodape {
+            margin-top: 20px;
+            color: var(--cinza);
+            font-size: 12px;
+            text-align: right;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .painel {
+                padding: 15px;
+            }
+
+            .cabecalho {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header class="cabecalho">
+        <div>
+            <h1>Inventário de TI</h1>
+            <p class="subtitulo">
+                Consulte, pesquise e gerencie os equipamentos cadastrados.
+            </p>
+        </div>
+
+        <a class="botao botao-principal"
+           th:href="@{/equipamentos/novo}">
+            + Novo equipamento
+        </a>
+    </header>
+
+    <!-- Mensagens de retorno -->
+    <div th:if="${sucesso}"
+         class="mensagem sucesso"
+         th:text="${sucesso}">
+    </div>
+
+    <div th:if="${erroGeral}"
+         class="mensagem erroGeral"
+         th:text="${erroGeral}">
+    </div>
+
+    <!-- Formulário de filtros -->
+    <section class="painel">
+        <h2>Pesquisar equipamentos</h2>
+
+        <form th:action="@{/equipamentos}"
+              method="get"
+              class="filtros">
+
+            <div class="campo">
+                <label for="numero">Número</label>
+                <input type="text"
+                       id="numero"
+                       name="numero"
+                       placeholder="Número do equipamento"
+                       th:value="${numero}">
+            </div>
+
+            <div class="campo">
+                <label for="nrp">NRP</label>
+                <input type="text"
+                       id="nrp"
+                       name="nrp"
+                       placeholder="Pesquisar NRP"
+                       th:value="${nrp}">
+            </div>
+
+            <div class="campo">
+                <label for="localidade">Localidade</label>
+                <input type="text"
+                       id="localidade"
+                       name="localidade"
+                       placeholder="Ex.: Brasília"
+                       th:value="${localidade}">
+            </div>
+
+            <div class="campo">
+                <label for="ip">IP ou prefixo de IP</label>
+                <input type="text"
+                       id="ip"
+                       name="ip"
+                       placeholder="Ex.: 192.168.1"
+                       th:value="${ip}">
+            </div>
+
+            <div class="acoes-filtro">
+                <button type="submit"
+                        class="botao botao-principal">
+                    Pesquisar
+                </button>
+
+                <a th:href="@{/equipamentos}"
+                   class="botao botao-secundario">
+                    Limpar filtros
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <!-- Tabela de equipamentos -->
+    <section class="painel">
+        <h2>Equipamentos cadastrados</h2>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>NRP</th>
+                    <th>Localidade</th>
+                    <th>IP</th>
+                    <th>Servidor</th>
+                    <th>Switch</th>
+                    <th>Porta</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="equipamento : ${equipamentos}">
+                    <td th:text="${equipamento.numero}"></td>
+
+                    <td th:text="${equipamento.nrp}"></td>
+
+                    <td th:text="${equipamento.localidade}"></td>
+
+                    <td th:text="${equipamento.ip}"></td>
+
+                    <td th:text="${equipamento.servidor}"></td>
+
+                    <td th:text="${equipamento.numeroSwitch}"></td>
+
+                    <td th:text="${equipamento.portaSwitch}"></td>
+
+                    <td>
+                        <span class="status"
+                              th:text="${equipamento.status}">
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="acoes-linha">
+
+                            <a class="botao botao-editar"
+                               th:href="@{/equipamentos/{id}/editar(id=${equipamento.id})}">
+                                Editar
+                            </a>
+
+                            <form class="form-excluir"
+                                  th:action="@{/equipamentos/{id}/excluir(id=${equipamento.id})}"
+                                  method="post"
+                                  onsubmit="return confirm('Tem certeza de que deseja excluir este equipamento? Esta ação não pode ser desfeita.');">
+
+                                <button type="submit"
+                                        class="botao botao-excluir">
+                                    Excluir
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(equipamentos)}">
+                    <td colspan="9" class="vazio">
+                        Nenhum equipamento encontrado.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="rodape">
+            Inventário TI — Gestão de equipamentos
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
