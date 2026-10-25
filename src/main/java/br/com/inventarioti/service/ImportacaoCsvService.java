@@ -85,12 +85,14 @@ public class ImportacaoCsvService {
             }
 
             String numero = campo(campos, 0);
-            String nrp = campo(campos, 1);
+            String nrpOriginal = campo(campos, 1);
+            String nrp = normalizarNrp(nrpOriginal);
             String localidade = campo(campos, 2);
             String mac = campo(campos, 3);
             String ip = campo(campos, 4);
             String servidor = campo(campos, 5);
-            String numeroSwitch = campo(campos, 6);
+            String numeroSwitchOriginal = campo(campos, 6);
+            String numeroSwitch = normalizarNumeroSwitch(numeroSwitchOriginal);
             String portaSwitch = campo(campos, 7);
             String status = campo(campos, 8).toUpperCase(Locale.ROOT);
 
@@ -108,7 +110,10 @@ public class ImportacaoCsvService {
             }
 
             validarTamanho(numero, 50, "Numero", erros);
-            validarTamanho(nrp, 80, "NRP", erros);
+            if (!numeroSwitch.isBlank() && !numeroSwitch.matches("\\d{6}")) {
+    erros.add("Numero Switch inválido: informe exatamente seis dígitos, "
+            + "com ou sem ponto (exemplo: 123456 ou 123.456)");
+}
             validarTamanho(localidade, 150, "Localidade", erros);
             validarTamanho(mac, 17, "MAC Address", erros);
             validarTamanho(ip, 45, "IP", erros);
@@ -226,6 +231,26 @@ public class ImportacaoCsvService {
     private String normalizarIdentificador(String valor) {
         return valor.trim().toLowerCase(Locale.ROOT);
     }
+
+    private String normalizarNrp(String nrp) {
+    String valor = nrp == null ? "" : nrp.trim();
+
+    if (valor.matches("\\d{3}\\.\\d{3}")) {
+        return valor.replace(".", "");
+    }
+
+    return valor;
+    }
+
+    private String normalizarNumeroSwitch(String numeroSwitch) {
+    String valor = numeroSwitch == null ? "" : numeroSwitch.trim();
+
+    if (valor.matches("\\d{3}\\.\\d{3}")) {
+        return valor.replace(".", "");
+    }
+
+    return valor;
+}
 
     private void validarCabecalho(List<String> cabecalho) {
         List<String> esperado = List.of(

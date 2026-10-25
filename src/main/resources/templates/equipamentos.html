@@ -660,7 +660,7 @@
                 <tr th:each="equipamento : ${equipamentos}">
                     <td th:text="${equipamento.numero}"></td>
 
-                    <td th:text="${equipamento.nrp}"></td>
+                    <td th:text="${equipamento.nrpFormatado}"></td>
 
                     <td th:text="${equipamento.localidade}"></td>
 
@@ -668,7 +668,7 @@
 
                     <td th:text="${equipamento.servidor}"></td>
 
-                    <td th:text="${equipamento.numeroSwitch}"></td>
+                    <td th:text="${equipamento.numeroSwitchFormatado}"></td>
 
                     <td th:text="${equipamento.portaSwitch}"></td>
 

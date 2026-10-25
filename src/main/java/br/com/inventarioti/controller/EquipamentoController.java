@@ -58,11 +58,14 @@ public class EquipamentoController {
         }
 
         if (nrp != null && !nrp.isBlank()) {
-            String filtro = nrp.trim().toLowerCase();
-            consulta = consulta.filter(e ->
-                    e.getNrp() != null &&
-                    e.getNrp().toLowerCase().contains(filtro));
-        }
+    String filtro = nrp.trim()
+            .replace(".", "")
+            .toLowerCase();
+
+    consulta = consulta.filter(e ->
+        e.getNrp() != null &&
+        e.getNrp().toLowerCase().contains(filtro));
+}
 
         if (localidade != null && !localidade.isBlank()) {
             String filtro = localidade.trim().toLowerCase();
@@ -141,7 +144,7 @@ public class EquipamentoController {
             return "equipamento-form";
         }
         if (equipamentoRepository
-        .findByNrpIgnoreCase(equipamento.getNrp().trim())
+        .findByNrpIgnoreCase(equipamento.getNrp())
         .isPresent()) {
 
     model.addAttribute(
@@ -200,7 +203,7 @@ public class EquipamentoController {
         var mesmoNumero = equipamentoRepository
                 .findByNumero(dados.getNumero());
         var mesmoNrp = equipamentoRepository
-        .findByNrpIgnoreCase(dados.getNrp().trim());
+        .findByNrpIgnoreCase(dados.getNrp());
 
 if (mesmoNrp.isPresent()
         && !mesmoNrp.get().getId().equals(id)) {

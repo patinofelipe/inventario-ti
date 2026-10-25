@@ -118,10 +118,19 @@
             </div>
 
             <div>
-                <label for="nrp">NRP</label>
-                <input id="nrp" type="text" th:field="*{nrp}"
-                       maxlength="80">
-            </div>
+    <label for="nrp">NRP *</label>
+    <input id="nrp"
+           type="text"
+           th:field="*{nrp}"
+           inputmode="numeric"
+           maxlength="7"
+           minlength="6"
+           pattern="[0-9]{3}\.?[0-9]{3}"
+           title="Informe seis dígitos. Exemplo: 123456 ou 123.456"
+           placeholder="123.456"
+           autocomplete="off"
+           required>
+</div>
 
             <div>
                 <label for="localidade">Localidade *</label>
@@ -181,5 +190,32 @@
         </div>
     </form>
 </main>
+<script>
+    function formatarNrp(valor) {
+        const digitos = valor.replace(/\D/g, "").slice(0, 6);
+
+        if (digitos.length <= 3) {
+            return digitos;
+        }
+
+        return digitos.slice(0, 3) + "." + digitos.slice(3);
+    }
+
+    function inicializarMascaraNrp() {
+        const campo = document.getElementById("nrp");
+
+        if (!campo) {
+            return;
+        }
+
+        campo.value = formatarNrp(campo.value);
+
+        campo.addEventListener("input", function () {
+            campo.value = formatarNrp(campo.value);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", inicializarMascaraNrp);
+</script>
 </body>
 </html>
