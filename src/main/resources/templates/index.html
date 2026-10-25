@@ -176,6 +176,24 @@
             Ver equipamentos
         </a>
     </article>
+    
+<article class="cartao">
+    <div class="rotulo">Percentual de equipamentos ativos</div>
+
+    <div class="numero"
+         th:text="${#numbers.formatDecimal(percentualAtivos, 1, 1) + '%'}">
+        0,0%
+    </div>
+
+    <p class="descricao">
+        Proporção de equipamentos ativos em relação ao total cadastrado.
+    </p>
+
+    <a class="botao" th:href="@{/equipamentos}">
+        Consultar inventário
+    </a>
+</article>
+
 </section>
 
 
