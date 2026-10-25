@@ -1,11 +1,280 @@
+
 <!doctype html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="${nomeSistema}">Inventário TI</title>
-  <style>
-    :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033}body{margin:0;background:#f3f6fb}header{background:#123b70;color:#fff;padding:1.25rem max(1rem,calc((100% - 960px)/2))}main{max-width:960px;margin:2rem auto;padding:0 1rem}.card{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:0 4px 18px #15294b12}.muted{color:#596579}.pill{display:inline-block;padding:.3rem .7rem;border-radius:999px;background:#e1f3e9;color:#17643a;font-size:.85rem}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dashboard | Inventário TI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            color: #172033;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f6fb;
+        }
+
+        header {
+            background: #123b70;
+            color: white;
+            padding: 22px max(20px, calc((100% - 1100px) / 2));
+        }
+
+        header strong {
+            font-size: 1.2rem;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .cabecalho {
+            margin-bottom: 26px;
+        }
+
+        .cabecalho h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+        }
+
+        .muted {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .grade {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .cartao {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 18px #15294b12;
+            border: 1px solid #e5eaf2;
+        }
+
+        .rotulo {
+            color: #64748b;
+            font-size: .95rem;
+            font-weight: 600;
+        }
+
+        .numero {
+            color: #123b70;
+            font-size: 2.8rem;
+            font-weight: 750;
+            margin: 14px 0;
+            line-height: 1.2;
+        }
+
+        .descricao {
+            color: #64748b;
+            font-size: .9rem;
+            margin-bottom: 20px;
+        }
+
+        .botao {
+            display: inline-block;
+            background: #1557a6;
+            color: white;
+            text-decoration: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .botao:hover {
+            background: #0e417f;
+        }
+
+        .secao {
+            margin-top: 26px;
+        }
+
+        .secao h2 {
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        .atalho {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+    </style>
 </head>
-<body><header><strong>Inventário TI</strong></header><main><section class="card"><span class="pill">Projeto inicial</span><h1 th:text="${nomeSistema}">Inventário TI</h1><p th:text="${mensagem}">Projeto iniciado.</p><p class="muted">O cadastro de equipamentos, as pesquisas e a exportação CSV serão implementados nas próximas etapas.</p></section></main></body>
+
+<body>
+<header>
+    <strong>Inventário TI</strong>
+</header>
+
+<main>
+    <section class="cabecalho">
+        <h1>Dashboard</h1>
+        <p class="muted">
+            Visão geral do inventário de equipamentos de TI.
+        </p>
+    </section>
+
+    
+<section class="grade">
+    <article class="cartao">
+        <div class="rotulo">Total de equipamentos</div>
+
+        <div class="numero"
+             th:text="${totalEquipamentos}">0</div>
+
+        <p class="descricao">
+            Equipamentos registrados no banco de dados.
+        </p>
+
+        <a class="botao" th:href="@{/equipamentos}">
+            Consultar equipamentos
+        </a>
+    </article>
+
+    <article class="cartao">
+        <div class="rotulo">Equipamentos ativos</div>
+
+        <div class="numero"
+             th:text="${equipamentosAtivos}">0</div>
+
+        <p class="descricao">
+            Equipamentos com status ATIVO.
+        </p>
+
+        <a class="botao" th:href="@{/equipamentos}">
+            Ver equipamentos
+        </a>
+    </article>
+
+    <article class="cartao">
+        <div class="rotulo">Equipamentos inativos</div>
+
+        <div class="numero"
+             th:text="${equipamentosInativos}">0</div>
+
+        <p class="descricao">
+            Equipamentos com status INATIVO.
+        </p>
+
+        <a class="botao" th:href="@{/equipamentos}">
+            Ver equipamentos
+        </a>
+    </article>
+</section>
+
+
+<section class="cartao secao">
+    <h2>Equipamentos por status</h2>
+
+    <p class="muted" style="margin-bottom: 24px;">
+        Proporção de equipamentos ativos e inativos.
+    </p>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: center;
+                justify-content: center; gap: 32px;">
+
+        <div th:style="'width: 190px; height: 190px; border-radius: 50%; background: conic-gradient(#16803d 0% ' + ${percentualAtivos} + '%, #d97706 ' + ${percentualAtivos} + '% 100%); display: flex; align-items: center; justify-content: center;'">
+            <div style="width: 120px; height: 120px; border-radius: 50%;
+                        background: white; display: flex;
+                        flex-direction: column; align-items: center;
+                        justify-content: center;">
+                <strong style="font-size: 1.8rem;"
+                        th:text="${totalEquipamentos}">0</strong>
+                <span style="font-size: .8rem; color: #64748b;">
+                    Equipamentos
+                </span>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="width: 13px; height: 13px; border-radius: 3px;
+                             background: #16803d;"></span>
+                <span>Ativos:</span>
+                <strong th:text="${equipamentosAtivos}">0</strong>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="width: 13px; height: 13px; border-radius: 3px;
+                             background: #d97706;"></span>
+                <span>Inativos:</span>
+                <strong th:text="${equipamentosInativos}">0</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="cartao secao">
+    <h2>Equipamentos por localidade</h2>
+
+    <p class="muted" style="margin-bottom: 24px;">
+        Distribuição dos equipamentos registrados em cada localidade.
+    </p>
+
+    <div th:if="${#lists.isEmpty(dadosLocalidade)}">
+        <p class="muted">Nenhum equipamento cadastrado para exibir.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(dadosLocalidade)}"
+         style="display: flex; flex-direction: column; gap: 20px;">
+
+        <div th:each="item : ${dadosLocalidade}">
+            <div style="display: flex; justify-content: space-between;
+                        gap: 12px; margin-bottom: 7px;">
+                <strong th:text="${item[0]}">Localidade</strong>
+
+                <span th:text="${item[1]}">0</span>
+            </div>
+
+            <div style="height: 12px; background: #e5eaf2;
+                        border-radius: 999px; overflow: hidden;">
+
+                <div style="height: 100%; background: #2563eb;
+                            border-radius: 999px; width: 0%;"
+                     th:style="'height: 100%; background: #2563eb; border-radius: 999px; width: ' + (${totalEquipamentos > 0} ? (${item[1] * 100.0 / totalEquipamentos}) : 0) + '%;'">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p style="margin-top: 24px;">
+        <a class="botao" th:href="@{/equipamentos}">
+            Consultar equipamentos
+        </a>
+    </p>
+</section>
+
+
+    <section class="cartao secao">
+        <h2>Acesso rápido</h2>
+
+        <div class="atalho">
+            <a class="botao" th:href="@{/equipamentos}">
+                Listar equipamentos
+            </a>
+
+            <a class="botao" th:href="@{/equipamentos/novo}">
+                Cadastrar equipamento
+            </a>
+        </div>
+    </section>
+</main>
+</body>
 </html>
