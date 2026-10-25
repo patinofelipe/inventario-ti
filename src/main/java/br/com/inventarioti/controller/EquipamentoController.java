@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -255,4 +259,57 @@ public class EquipamentoController {
 
         return "redirect:/equipamentos";
     }
+
+
+    @GetMapping("/exportar")
+    public void exportar(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=\"inventario_equipamentos.csv\""
+        );
+
+        response.setHeader("Cache-Control", "no-store");
+
+        response.getOutputStream().write(new byte[] {
+                (byte) 0xEF, (byte) 0xBB, (byte) 0xBF
+        });
+
+        try (PrintWriter writer = new PrintWriter(
+                response.getOutputStream(), false, StandardCharsets.UTF_8)) {
+
+            writer.println(
+                    "Numero;NRP;Localidade;MAC Address;IP;Servidor;"
+                    + "Numero Switch;Porta Switch;Status"
+            );
+
+            for (Equipamento e : equipamentoRepository.findAll()) {
+                writer.println(
+                        csv(e.getNumero()) + ";" +
+                        csv(e.getNrp()) + ";" +
+                        csv(e.getLocalidade()) + ";" +
+                        csv(e.getMacAddress()) + ";" +
+                        csv(e.getIp()) + ";" +
+                        csv(e.getServidor()) + ";" +
+                        csv(e.getNumeroSwitch()) + ";" +
+                        csv(e.getPortaSwitch()) + ";" +
+                        csv(e.getStatus())
+                );
+            }
+
+            writer.flush();
+        }
+    }
+
+    private String csv(String valor) {
+        if (valor == null) {
+            return "";
+        }
+
+        String protegido = valor.replace("\"", "\"\"");
+        return "\"" + protegido + "\"";
+    }
+
+
 }
