@@ -3,6 +3,7 @@ package br.com.inventarioti.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "equipamentos")
@@ -12,12 +13,15 @@ public class Equipamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O número do equipamento é obrigatório.")
     @Column(name = "numero", nullable = false, unique = true, length = 50)
     private String numero;
 
-    @Column(name = "nrp", length = 80)
+    @NotBlank(message = "O NRP é obrigatório.")
+    @Column(name = "nrp", nullable = false, unique = true, length = 80)
     private String nrp;
 
+    @NotBlank(message = "A localidade é obrigatória.")
     @Column(name = "localidade", nullable = false, length = 150)
     private String localidade;
 

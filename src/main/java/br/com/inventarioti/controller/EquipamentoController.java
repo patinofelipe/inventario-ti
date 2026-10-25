@@ -18,7 +18,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-
+import br.com.inventarioti.service.ImportacaoCsvService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,11 +30,14 @@ import java.util.stream.Stream;
 public class EquipamentoController {
 
     private final EquipamentoRepository equipamentoRepository;
+    private final ImportacaoCsvService importacaoCsvService;
 
     public EquipamentoController(
-            EquipamentoRepository equipamentoRepository) {
-        this.equipamentoRepository = equipamentoRepository;
-    }
+        EquipamentoRepository equipamentoRepository,
+        ImportacaoCsvService importacaoCsvService) {
+    this.equipamentoRepository = equipamentoRepository;
+    this.importacaoCsvService = importacaoCsvService;
+}
 
     @GetMapping
     public String listar(
@@ -134,7 +140,17 @@ public class EquipamentoController {
             model.addAttribute("modoEdicao", false);
             return "equipamento-form";
         }
+        if (equipamentoRepository
+        .findByNrpIgnoreCase(equipamento.getNrp().trim())
+        .isPresent()) {
 
+    model.addAttribute(
+            "erro",
+            "Já existe um equipamento cadastrado com esse NRP."
+    );
+    model.addAttribute("modoEdicao", false);
+    return "equipamento-form";
+}
         try {
             equipamentoRepository.save(equipamento);
         } catch (DataIntegrityViolationException e) {
@@ -183,7 +199,21 @@ public class EquipamentoController {
 
         var mesmoNumero = equipamentoRepository
                 .findByNumero(dados.getNumero());
+        var mesmoNrp = equipamentoRepository
+        .findByNrpIgnoreCase(dados.getNrp().trim());
 
+if (mesmoNrp.isPresent()
+        && !mesmoNrp.get().getId().equals(id)) {
+
+    model.addAttribute("equipamento", dados);
+    model.addAttribute(
+            "erro",
+            "Esse NRP já pertence a outro equipamento."
+    );
+    model.addAttribute("modoEdicao", true);
+    model.addAttribute("idEdicao", id);
+    return "equipamento-form";
+}
         if (mesmoNumero.isPresent()
                 && !mesmoNumero.get().getId().equals(id)) {
             model.addAttribute(
@@ -301,7 +331,34 @@ public class EquipamentoController {
             writer.flush();
         }
     }
+    @PostMapping(
+        value = "/importar",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+)
+public void importar(
+        @RequestParam("arquivo") MultipartFile arquivo,
+        HttpServletResponse response) throws IOException {
 
+    String relatorio;
+
+    try {
+        relatorio = importacaoCsvService.importar(arquivo);
+    } catch (IllegalArgumentException e) {
+        relatorio = "IMPORTAÇÃO NÃO EXECUTADA\n\nMotivo: "
+                + e.getMessage() + "\n";
+    }
+
+    response.setContentType("text/plain; charset=UTF-8");
+    response.setCharacterEncoding("UTF-8");
+    response.setHeader(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"relatorio_importacao.txt\""
+    );
+
+    response.getOutputStream().write(
+            relatorio.getBytes(StandardCharsets.UTF_8)
+    );
+}
     private String csv(String valor) {
         if (valor == null) {
             return "";

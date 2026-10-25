@@ -12,6 +12,7 @@ public interface EquipamentoRepository
         extends JpaRepository<Equipamento, Long> {
 
     Optional<Equipamento> findByNumero(String numero);
+    Optional<Equipamento> findByNrpIgnoreCase(String nrp);
 
     List<Equipamento> findByLocalidadeContainingIgnoreCase(
             String localidade);
