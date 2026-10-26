@@ -37,6 +37,14 @@ public class HomeController {
         model.addAttribute("equipamentosAtivos", ativos);
         model.addAttribute("equipamentosInativos", inativos);
         model.addAttribute("percentualAtivos", percentualAtivos);
+                long equipamentosSemIp =
+                equipamentoRepository.contarSemIp();
+
+        long equipamentosSemMac =
+                equipamentoRepository.contarSemMacAddress();
+
+        model.addAttribute("equipamentosSemIp", equipamentosSemIp);
+        model.addAttribute("equipamentosSemMac", equipamentosSemMac);
 
         List<Object[]> dadosLocalidade =
                 equipamentoRepository.contarPorLocalidade();

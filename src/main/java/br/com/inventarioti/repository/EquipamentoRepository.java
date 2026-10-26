@@ -30,4 +30,19 @@ public interface EquipamentoRepository
     ORDER BY e.localidade
     """)
 List<Object[]> contarPorLocalidade();
+
+    @Query("""
+        SELECT COUNT(e)
+        FROM Equipamento e
+        WHERE e.ip IS NULL OR TRIM(e.ip) = ''
+        """)
+    long contarSemIp();
+
+    @Query("""
+        SELECT COUNT(e)
+        FROM Equipamento e
+        WHERE e.macAddress IS NULL OR TRIM(e.macAddress) = ''
+        """)
+    long contarSemMacAddress();
+
 }
