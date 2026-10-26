@@ -52,10 +52,12 @@
             margin: 0;
         }
 
+        
         .grade {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 20px;
+            align-items: stretch;
         }
 
         .cartao {
@@ -64,7 +66,52 @@
             padding: 24px;
             box-shadow: 0 4px 18px #15294b12;
             border: 1px solid #e5eaf2;
+            min-width: 0;
+            box-sizing: border-box;
         }
+
+        .grafico-status {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .secao {
+            margin-top: 26px;
+        }
+
+        .secao h2 {
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        .atalho {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 1000px) {
+            .grade {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .grafico-status {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .grade {
+                grid-template-columns: 1fr;
+            }
+
+            .grafico-status {
+                grid-column: span 1;
+            }
+        }
+
 
         .rotulo {
             color: #64748b;
@@ -194,11 +241,45 @@
     </a>
 </article>
 
-</section>
+<article class="cartao">
+    <div class="rotulo">Equipamentos sem IP</div>
 
+    <div class="numero"
+         th:text="${equipamentosSemIp}">
+        0
+    </div>
 
-<section class="cartao secao">
+    <p class="descricao">
+        Equipamentos sem endereço IP cadastrado.
+    </p>
+
+    <a class="botao" th:href="@{/equipamentos}">
+        Consultar inventário
+    </a>
+</article>
+
+<article class="cartao">
+    <div class="rotulo">Equipamentos sem MAC</div>
+
+    <div class="numero"
+         th:text="${equipamentosSemMac}">
+        0
+    </div>
+
+    <p class="descricao">
+        Equipamentos sem endereço MAC cadastrado.
+    </p>
+
+    <a class="botao" th:href="@{/equipamentos}">
+        Consultar inventário
+    </a>
+</article>
+
+<article class="cartao secao grafico-status">
     <h2>Equipamentos por status</h2>
+
+
+
 
     <p class="muted" style="margin-bottom: 24px;">
         Proporção de equipamentos ativos e inativos.
@@ -236,8 +317,9 @@
             </div>
         </div>
     </div>
+</article>
+     
 </section>
-
 
 <section class="cartao secao">
     <h2>Equipamentos por localidade</h2>
