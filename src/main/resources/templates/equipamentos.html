@@ -525,6 +525,11 @@
         </div>
 
         <div class="acoes-cabecalho">
+            <a class="botao botao-secundario"
+              th:href="@{/}"
+              title="Voltar à página inicial">
+              Home
+            </a>
             <a class="botao botao-principal"
                th:href="@{/equipamentos/novo}">
                 + Novo equipamento
@@ -579,6 +584,9 @@
                   method="post"
                   enctype="multipart/form-data"
                   class="form-importacao">
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}" />
 
                 <div class="importacao-arquivo">
                     <label for="arquivoCsv">Arquivo CSV</label>
@@ -751,7 +759,10 @@
                             <form class="form-excluir"
                                   th:action="@{/equipamentos/{id}/excluir(id=${equipamento.id})}"
                                   method="post"
-                                  onsubmit="return confirm('Tem certeza de que deseja excluir este equipamento? Esta ação não pode ser desfeita.');">
+                                  onsubmit="return confirm(
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}" />'Tem certeza de que deseja excluir este equipamento? Esta ação não pode ser desfeita.');">
 
                                 <button type="submit"
                                         class="botao botao-excluir">
