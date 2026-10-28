@@ -8,6 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -27,6 +29,9 @@ class ConfiguracaoSegurancaTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void deveExibirPaginaDeLoginSemAutenticacao() throws Exception {
@@ -91,4 +96,53 @@ void deveRedirecionarUsuarioAnonimoParaLoginAoAcessarPainel()
                         .with(csrf()))
                 .andExpect(status().isForbidden());
     }
+
+@Test
+void deveAutenticarUsuarioComSenhaCorreta() throws Exception {
+    String senha = "SenhaTeste123!";
+
+    var usuario = User.withUsername("teste@example.com")
+            .password(passwordEncoder.encode(senha))
+            .roles("USUARIO")
+            .build();
+
+    org.mockito.Mockito.when(
+            userDetailsService.loadUserByUsername("teste@example.com")
+    ).thenReturn(usuario);
+
+    mockMvc.perform(post("/login")
+                    .with(csrf())
+                    .param("username", "teste@example.com")
+                    .param("password", senha))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/"));
+
+    org.mockito.Mockito.verify(controleLoginService)
+            .registrarSucesso("teste@example.com");
+}
+
+@Test
+void deveRegistrarFalhaQuandoSenhaEstiverIncorreta() throws Exception {
+    String senhaCorreta = "SenhaTeste123!";
+
+    var usuario = User.withUsername("teste@example.com")
+            .password(passwordEncoder.encode(senhaCorreta))
+            .roles("USUARIO")
+            .build();
+
+    org.mockito.Mockito.when(
+            userDetailsService.loadUserByUsername("teste@example.com")
+    ).thenReturn(usuario);
+
+    mockMvc.perform(post("/login")
+                    .with(csrf())
+                    .param("username", "teste@example.com")
+                    .param("password", "SenhaErrada123!"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/login?error"));
+
+    org.mockito.Mockito.verify(controleLoginService)
+            .registrarFalha("teste@example.com");
+}
+
 }
