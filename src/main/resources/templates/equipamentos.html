@@ -756,19 +756,22 @@
                                 Editar
                             </a>
 
-                            <form class="form-excluir"
-                                  th:action="@{/equipamentos/{id}/excluir(id=${equipamento.id})}"
-                                  method="post"
-                                  onsubmit="return confirm(
+                            
+<form class="form-excluir"
+      th:action="@{/equipamentos/{id}/excluir(id=${equipamento.id})}"
+      method="post"
+      onsubmit="return confirm('Tem certeza de que deseja excluir este equipamento? Esta ação não pode ser desfeita.');">
+
     <input type="hidden"
            th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}" />'Tem certeza de que deseja excluir este equipamento? Esta ação não pode ser desfeita.');">
+           th:value="${_csrf.token}" />
 
-                                <button type="submit"
-                                        class="botao botao-excluir">
-                                    Excluir
-                                </button>
-                            </form>
+    <button type="submit"
+            class="botao botao-excluir">
+        Excluir
+    </button>
+</form>
+
                         </div>
                     </td>
                 </tr>
