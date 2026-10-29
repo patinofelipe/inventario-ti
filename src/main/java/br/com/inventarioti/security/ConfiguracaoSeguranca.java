@@ -114,11 +114,14 @@ AuthenticationSuccessHandler successHandler = (request, response, authentication
 .failureHandler(failureHandler)
                 .permitAll()
             )
-            .logout(logout -> logout
+                        .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .permitAll()
+            )
+            .exceptionHandling(exception -> exception
+                .accessDeniedPage("/acesso-negado")
             );
 
         return http.build();

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso não permitido - Inventário TI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .painel {
+            width: 100%;
+            max-width: 520px;
+            padding: 40px 28px;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.10);
+        }
+
+        .icone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 76px;
+            height: 76px;
+            margin-bottom: 18px;
+            border-radius: 50%;
+            background: #fff7ed;
+            color: #c2410c;
+            font-size: 38px;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            font-size: 28px;
+        }
+
+        p {
+            margin: 0 0 14px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .botao {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 13px 22px;
+            border-radius: 8px;
+            background: #1d4ed8;
+            color: #ffffff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .botao:hover {
+            background: #1e40af;
+        }
+
+        .rodape {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <main class="painel">
+        <div class="icone" aria-hidden="true">!</div>
+
+        <h1>Acesso não permitido</h1>
+
+        <p>
+            Seu perfil de acesso não permite visualizar esta página
+            ou executar esta ação.
+        </p>
+
+        <p>
+            Se você acredita que precisa dessa permissão,
+            entre em contato com o administrador do sistema.
+        </p>
+
+        <a class="botao" th:href="@{/equipamentos}">
+            Voltar aos equipamentos
+        </a>
+
+        <div class="rodape">Inventário TI</div>
+    </main>
+</body>
+</html>
