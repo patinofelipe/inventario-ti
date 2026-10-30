@@ -1,0 +1,106 @@
+
+package br.com.inventarioti.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+@Configuration
+public class ConfiguracaoSeguranca {
+    private final ControleLoginService controleLoginService;
+
+public ConfiguracaoSeguranca(ControleLoginService controleLoginService) {
+    this.controleLoginService = controleLoginService;
+}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http) throws Exception {
+        AuthenticationFailureHandler failureHandler = (request, response, exception) -> {
+    if (exception instanceof BadCredentialsException) {
+        controleLoginService.registrarFalha(
+                request.getParameter("username")
+        );
+    }
+
+    response.sendRedirect(request.getContextPath() + "/login?error");
+};
+
+AuthenticationSuccessHandler successHandler = (request, response, authentication) -> {
+    controleLoginService.registrarSucesso(authentication.getName());
+    response.sendRedirect(request.getContextPath() + "/");
+};
+
+
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+        "/login",
+        "/css/**",
+        "/js/**",
+        "/images/**",
+        "/favicon.ico"
+).permitAll()
+
+.requestMatchers(HttpMethod.GET, "/")
+        .hasAnyRole("ADM", "USUARIO", "CLIENTE")
+
+                .requestMatchers("/usuarios/**").hasRole("ADM")
+
+                .requestMatchers(HttpMethod.GET,
+                        "/equipamentos/exportar")
+                        .hasAnyRole("ADM", "USUARIO", "CLIENTE")
+
+                .requestMatchers(HttpMethod.POST,
+                        "/equipamentos/importar",
+                        "/equipamentos/salvar",
+                        "/equipamentos/*/atualizar")
+                        .hasAnyRole("ADM", "USUARIO")
+
+                .requestMatchers(HttpMethod.POST,
+                        "/equipamentos/*/excluir")
+                        .hasRole("ADM")
+
+                .requestMatchers(HttpMethod.GET,
+                        "/equipamentos/novo",
+                        "/equipamentos/*/editar")
+                        .hasAnyRole("ADM", "USUARIO")
+
+                .requestMatchers("/equipamentos", "/equipamentos/")
+    .hasAnyRole("ADM", "USUARIO", "CLIENTE")
+
+.requestMatchers("/equipamentos/**").denyAll()
+
+.anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .successHandler(successHandler)
+.failureHandler(failureHandler)
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .permitAll()
+            );
+
+        return http.build();
+    }
+}
+

@@ -1,5 +1,6 @@
 package br.com.inventarioti.security;
 
+import br.com.inventarioti.repository.UsuarioRepository;
 import br.com.inventarioti.controller.LoginController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(LoginController.class)
 @Import(ConfiguracaoSeguranca.class)
 class ConfiguracaoSegurancaTest {
@@ -29,6 +31,9 @@ class ConfiguracaoSegurancaTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
+
+    @MockBean
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

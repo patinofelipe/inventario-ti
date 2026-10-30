@@ -1,0 +1,149 @@
+<header th:fragment="cabecalho"
+        xmlns:th="http://www.thymeleaf.org"
+        class="barra-sistema">
+
+    <style>
+        .barra-sistema {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 22px;
+            background: #123b70;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .barra-marca {
+            font-size: 20px;
+            font-weight: 750;
+        }
+
+        .barra-identificacao {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .barra-usuario {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            text-align: right;
+        }
+
+        .barra-usuario strong {
+            font-size: 14px;
+        }
+
+        .barra-usuario small {
+            color: #dbeafe;
+            font-size: 12px;
+        }
+
+        .barra-acoes {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .barra-botao {
+            display: inline-block;
+            padding: 9px 13px;
+            border: 1px solid #ffffff55;
+            border-radius: 7px;
+            color: white;
+            background: #ffffff18;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .barra-botao:hover {
+            background: #ffffff30;
+        }
+
+        .barra-sair {
+            border: none;
+            background: #dc2626;
+        }
+
+        .barra-sair:hover {
+            background: #b91c1c;
+        }
+
+        @media (max-width: 600px) {
+            .barra-sistema {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .barra-identificacao {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .barra-usuario {
+                text-align: left;
+            }
+        }
+    </style>
+
+    <div class="barra-marca">
+        Inventário TI
+    </div>
+
+    <div class="barra-identificacao"
+         th:if="${usuarioLogado != null}">
+
+        <div class="barra-usuario">
+            <strong th:text="${usuarioLogado.nome}">
+                Nome do usuário
+            </strong>
+
+            <small th:text="${usuarioLogado.perfil}">
+                Perfil
+            </small>
+
+            <small th:text="${usuarioLogado.email}">
+                email
+            </small>
+        </div>
+
+        <div class="barra-acoes">
+
+            <a class="barra-botao"
+               th:href="@{/}">
+                Painel
+            </a>
+
+            <a class="barra-botao"
+               th:if="${usuarioLogado.administrador}"
+               th:href="@{/usuarios}">
+                Gerenciar usuários
+            </a>
+
+            <form th:action="@{/logout}"
+                  method="post"
+                  style="margin: 0;">
+
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+
+                <button type="submit"
+                        class="barra-botao barra-sair">
+                    Sair
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+</header>
+

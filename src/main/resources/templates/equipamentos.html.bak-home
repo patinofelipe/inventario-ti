@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipamentos | Inventário TI</title>
+
+    <style>
+        :root {
+            --azul: #1565c0;
+            --azul-escuro: #0d47a1;
+            --azul-claro: #eaf3ff;
+            --vermelho: #c62828;
+            --vermelho-claro: #ffebee;
+            --verde: #18794e;
+            --verde-claro: #e8f5e9;
+            --cinza: #64748b;
+            --fundo: #f4f7fb;
+            --borda: #dce3ec;
+            --texto: #1e293b;
+            --branco: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: var(--azul-escuro);
+            font-size: 28px;
+        }
+
+        .subtitulo {
+            margin: 0;
+            color: var(--cinza);
+        }
+
+        .acoes-cabecalho {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .painel {
+            margin-bottom: 22px;
+            padding: 22px;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .painel h2 {
+            margin: 0 0 18px;
+            font-size: 18px;
+        }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo label {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            padding: 11px 12px;
+            border: 1px solid var(--borda);
+            border-radius: 7px;
+            background: #fff;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: var(--azul);
+        }
+
+        .acoes-filtro {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .botao {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .botao:hover {
+            transform: translateY(-1px);
+        }
+
+        .botao-principal,
+        .botao-editar {
+            color: white;
+            background: var(--azul);
+        }
+
+        .botao-principal:hover,
+        .botao-editar:hover {
+            background: var(--azul-escuro);
+        }
+
+        .botao-secundario {
+            color: var(--texto);
+            background: #e8edf4;
+        }
+
+        .botao-secundario:hover {
+            background: #d8e0eb;
+        }
+
+        .botao-excluir {
+            color: white;
+            background: var(--vermelho);
+        }
+
+        .botao-excluir:hover {
+            background: #8e0000;
+        }
+
+        .mensagem {
+            margin-bottom: 18px;
+            padding: 13px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sucesso {
+            color: var(--verde);
+            background: var(--verde-claro);
+            border: 1px solid #a5d6a7;
+        }
+
+        .erroGeral {
+            color: var(--vermelho);
+            background: var(--vermelho-claro);
+            border: 1px solid #ef9a9a;
+        }
+
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        thead {
+            color: white;
+            background: var(--azul-escuro);
+        }
+
+        th,
+        td {
+            padding: 13px 12px;
+            border-bottom: 1px solid var(--borda);
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        tbody tr:hover {
+            background: #f0f6ff;
+        }
+
+        .acoes-linha {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-excluir {
+            display: inline;
+            margin: 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: var(--azul-claro);
+            color: var(--azul-escuro);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .vazio {
+            padding: 28px;
+            color: var(--cinza);
+            text-align: center;
+        }
+
+        .rodape {
+            margin-top: 20px;
+            color: var(--cinza);
+            font-size: 12px;
+            text-align: right;
+        }
+
+        /* Painel profissional de importação CSV */
+        .painel-importacao {
+            margin: 0 0 24px;
+            padding: 24px;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.045);
+        }
+
+        /* Painel recolhível com animação */
+        .painel-importacao-container {
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            overflow: hidden;
+            transition:
+                max-height 0.35s ease,
+                opacity 0.25s ease,
+                visibility 0.35s ease;
+        }
+
+        .painel-importacao-container.aberto {
+            max-height: 900px;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .importacao-cabecalho {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .importacao-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 54px;
+            width: 54px;
+            height: 54px;
+            color: var(--azul);
+            background: var(--azul-claro);
+            border: 1px solid #d5e6ff;
+            border-radius: 12px;
+        }
+
+        .importacao-icone svg {
+            width: 27px;
+            height: 27px;
+        }
+
+        .importacao-titulo h2 {
+            margin: 0 0 6px;
+            color: var(--azul-escuro);
+            font-size: 19px;
+            line-height: 1.35;
+        }
+
+        .importacao-titulo p {
+            margin: 0;
+            color: var(--cinza);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-importacao {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: start;
+            gap: 18px;
+            margin: 0;
+            padding: 20px;
+            background: #f8faff;
+            border: 1px solid #e1eaf7;
+            border-radius: 10px;
+        }
+
+        .importacao-arquivo {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .importacao-arquivo label {
+            color: var(--texto);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .importacao-arquivo input[type="file"] {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            padding: 8px;
+            color: var(--texto);
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .importacao-arquivo input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            padding: 9px 12px;
+            color: var(--azul-escuro);
+            background: var(--azul-claro);
+            border: 0;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .importacao-arquivo input[type="file"]::file-selector-button:hover {
+            background: #d8e8ff;
+        }
+
+        .ajuda-arquivo {
+            color: var(--cinza);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        
+.botao-importar {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-start;
+    gap: 9px;
+    min-height: 44px;
+    margin-top:27px;
+    padding: 10px 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+
+        .botao-importar svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .importacao-regras {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #edf1f6;
+        }
+
+        .regra-importacao {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            color: var(--cinza);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .regra-importacao strong {
+            color: var(--texto);
+        }
+
+        .regra-check,
+        .regra-info {
+            display: inline-flex;
+            flex: 0 0 18px;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .regra-check {
+            color: var(--verde);
+            background: var(--verde-claro);
+        }
+
+        .regra-info {
+            color: var(--azul);
+            background: var(--azul-claro);
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .painel {
+                padding: 15px;
+            }
+
+            .cabecalho {
+                align-items: flex-start;
+            }
+
+            .painel-importacao {
+                padding: 17px;
+            }
+
+            .form-importacao {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 16px;
+                padding: 15px;
+            }
+
+            .botao-importar {
+                width: 100%;
+            }
+
+            .importacao-regras {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .importacao-cabecalho {
+                align-items: flex-start;
+                gap: 11px;
+            }
+
+            .importacao-icone {
+                flex-basis: 44px;
+                width: 44px;
+                height: 44px;
+            }
+
+            .importacao-titulo h2 {
+                font-size: 17px;
+            }
+
+            .acoes-cabecalho {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .painel-importacao-container,
+            .botao {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header class="cabecalho">
+        <div>
+            <h1>Inventário de TI</h1>
+            <p class="subtitulo">
+                Consulte, pesquise e gerencie os equipamentos cadastrados.
+            </p>
+        </div>
+
+        <div class="acoes-cabecalho">
+            <a class="botao botao-principal"
+               th:href="@{/equipamentos/novo}">
+                + Novo equipamento
+            </a>
+
+            <a class="botao botao-secundario"
+               th:href="@{/equipamentos/exportar}">
+                Exportar CSV
+            </a>
+
+            <button type="button"
+                    id="alternarImportacao"
+                    class="botao botao-secundario"
+                    aria-controls="painelImportacao"
+                    aria-expanded="false">
+                Importar CSV
+            </button>
+        </div>
+    </header>
+
+    <!-- Painel recolhível de importação CSV -->
+    <div class="painel-importacao-container"
+         id="painelImportacao"
+         aria-hidden="true">
+
+        <section class="painel-importacao">
+            <div class="importacao-cabecalho">
+                <div class="importacao-icone" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 16V4m0 0L7 9m5-5 5 5"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"/>
+                    </svg>
+                </div>
+
+                <div class="importacao-titulo">
+                    <h2>Importação de equipamentos</h2>
+                    <p>
+                        Cadastre vários equipamentos de uma só vez usando
+                        um arquivo CSV.
+                    </p>
+                </div>
+            </div>
+
+            <form th:action="@{/equipamentos/importar}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="form-importacao">
+
+                <div class="importacao-arquivo">
+                    <label for="arquivoCsv">Arquivo CSV</label>
+                    <input id="arquivoCsv"
+                           type="file"
+                           name="arquivo"
+                           accept=".csv,text/csv"
+                           required>
+                    <span class="ajuda-arquivo">
+                        Selecione um arquivo CSV com as colunas do inventário.
+                        Máximo de 10 MB.
+                    </span>
+                </div>
+
+                <button type="submit"
+                        class="botao botao-principal botao-importar">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 16V4m0 0L7 9m5-5 5 5"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"
+                              stroke="currentColor"
+                              stroke-width="1.8"
+                              stroke-linecap="round"/>
+                    </svg>
+                    Importar equipamentos
+                </button>
+            </form>
+
+            <div class="importacao-regras">
+                <div class="regra-importacao">
+                    <span class="regra-check">✓</span>
+                    <span>
+                        <strong>Obrigatórios:</strong>
+                        Número, NRP e localidade.
+                    </span>
+                </div>
+
+                <div class="regra-importacao">
+                    <span class="regra-check">✓</span>
+                    <span>
+                        <strong>Sem duplicidades:</strong>
+                        Número e NRP não podem se repetir.
+                    </span>
+                </div>
+
+                <div class="regra-importacao">
+                    <span class="regra-info">i</span>
+                    <span>
+                        MAC Address e IP ausentes geram avisos no relatório.
+                    </span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Mensagens de retorno -->
+    <div th:if="${sucesso}"
+         class="mensagem sucesso"
+         th:text="${sucesso}">
+    </div>
+
+    <div th:if="${erroGeral}"
+         class="mensagem erroGeral"
+         th:text="${erroGeral}">
+    </div>
+
+    <!-- Formulário de filtros -->
+    <section class="painel">
+        <h2>Pesquisar equipamentos</h2>
+
+        <form th:action="@{/equipamentos}"
+              method="get"
+              class="filtros">
+
+            <div class="campo">
+                <label for="numero">Número</label>
+                <input type="text"
+                       id="numero"
+                       name="numero"
+                       placeholder="Número do equipamento"
+                       th:value="${numero}">
+            </div>
+
+            <div class="campo">
+                <label for="nrp">NRP</label>
+                <input type="text"
+                       id="nrp"
+                       name="nrp"
+                       placeholder="Pesquisar NRP"
+                       th:value="${nrp}">
+            </div>
+
+            <div class="campo">
+                <label for="localidade">Localidade</label>
+                <input type="text"
+                       id="localidade"
+                       name="localidade"
+                       placeholder="Ex.: Brasília"
+                       th:value="${localidade}">
+            </div>
+
+            <div class="campo">
+                <label for="ip">IP ou prefixo de IP</label>
+                <input type="text"
+                       id="ip"
+                       name="ip"
+                       placeholder="Ex.: 192.168.1"
+                       th:value="${ip}">
+            </div>
+
+            <div class="acoes-filtro">
+                <button type="submit" class="botao botao-principal">
+                    Pesquisar
+                </button>
+
+                <a th:href="@{/equipamentos}"
+                   class="botao botao-secundario">
+                    Limpar filtros
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <!-- Tabela de equipamentos -->
+    <section class="painel">
+        <h2>Equipamentos cadastrados</h2>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>NRP</th>
+                    <th>Localidade</th>
+                    <th>IP</th>
+                    <th>Servidor</th>
+                    <th>Switch</th>
+                    <th>Porta</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="equipamento : ${equipamentos}">
+                    <td th:text="${equipamento.numero}"></td>
+                    <td th:text="${equipamento.nrpFormatado}"></td>
+                    <td th:text="${equipamento.localidade}"></td>
+                    <td th:text="${equipamento.ip}"></td>
+                    <td th:text="${equipamento.servidor}"></td>
+                    <td th:text="${equipamento.numeroSwitchFormatado}"></td>
+                    <td th:text="${equipamento.portaSwitch}"></td>
+
+                    <td>
+                        <span class="status"
+                              th:text="${equipamento.status}">
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="acoes-linha">
+                            <a class="botao botao-editar"
+                               th:href="@{/equipamentos/{id}/editar(id=${equipamento.id})}">
+                                Editar
+                            </a>
+
+                            <form class="form-excluir"
+                                  th:action="@{/equipamentos/{id}/excluir(id=${equipamento.id})}"
+                                  method="post"
+                                  onsubmit="return confirm('Tem certeza de que deseja excluir este equipamento? Esta ação não pode ser desfeita.');">
+
+                                <button type="submit"
+                                        class="botao botao-excluir">
+                                    Excluir
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(equipamentos)}">
+                    <td colspan="9" class="vazio">
+                        Nenhum equipamento encontrado.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="rodape">
+            Inventário TI — Gestão de equipamentos
+        </div>
+    </section>
+
+</div>
+
+<script>
+    (() => {
+        const botao = document.getElementById('alternarImportacao');
+        const painel = document.getElementById('painelImportacao');
+
+        if (!botao || !painel) {
+            return;
+        }
+
+        botao.addEventListener('click', () => {
+            const aberto = painel.classList.toggle('aberto');
+
+            botao.setAttribute('aria-expanded', String(aberto));
+            painel.setAttribute('aria-hidden', String(!aberto));
+        });
+    })();
+</script>
+
+</body>
+</html>
