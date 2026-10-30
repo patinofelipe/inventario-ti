@@ -1,12 +1,12 @@
 package br.com.inventarioti.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class AcessoNegadoController {
 
-    @GetMapping("/acesso-negado")
+        @RequestMapping("/acesso-negado")
     public String acessoNegado() {
         return "error/403";
     }

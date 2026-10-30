@@ -128,12 +128,29 @@
             </p>
         </div>
 
-        <a class="botao" th:href="@{/}">
-            Voltar ao painel
-        </a>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <a class="botao" th:href="@{/usuarios/novo}">
+        + Novo usuário
+    </a>
+
+    <a class="botao" th:href="@{/}">
+        Voltar ao painel
+    </a>
+</div>
     </header>
 
     <section class="painel">
+        <div th:if="${sucesso}"
+     style="background: #dcfce7; color: #166534;
+            padding: 12px; border-radius: 7px; margin-bottom: 16px;"
+     th:text="${sucesso}">
+</div>
+
+<div th:if="${erro}"
+     style="background: #fee2e2; color: #991b1b;
+            padding: 12px; border-radius: 7px; margin-bottom: 16px;"
+     th:text="${erro}">
+</div>
         <table th:if="${not #lists.isEmpty(usuarios)}">
             <thead>
             <tr>
