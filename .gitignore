@@ -8,3 +8,8 @@ target/
 .settings/
 .DS_Store
 backup_equipamentos_antes_nrp.sql
+
+# Arquivos de backup locais
+*.bak
+*.bak-*
+backups/
