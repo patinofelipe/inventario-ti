@@ -1,156 +1,49 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários - Inventário TI</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        body {
-            margin: 0;
-            padding: 24px;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .cabecalho {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 24px;
-        }
-
-        h1 {
-            margin: 0 0 8px;
-        }
-
-        .subtitulo {
-            margin: 0;
-            color: #64748b;
-        }
-
-        .painel {
-            padding: 24px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.07);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 14px 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        th {
-            background: #f8fafc;
-            color: #475569;
-        }
-
-        .situacao {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .ativo {
-            color: #166534;
-            background: #dcfce7;
-        }
-
-        .inativo {
-            color: #991b1b;
-            background: #fee2e2;
-        }
-
-        .botao {
-            display: inline-block;
-            padding: 11px 16px;
-            border-radius: 7px;
-            background: #1d4ed8;
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .botao:hover {
-            background: #1e40af;
-        }
-
-        .vazio {
-            padding: 24px;
-            text-align: center;
-            color: #64748b;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 14px;
-            }
-
-            .painel {
-                padding: 12px;
-            }
-
-            th, td {
-                padding: 10px 8px;
-                font-size: 13px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/usuarios.css}">
 </head>
+
 <body>
 <main class="container">
+
     <header class="cabecalho">
         <div>
             <h1>Usuários do sistema</h1>
+
             <p class="subtitulo">
                 Consulta das contas e dos respectivos perfis de acesso.
             </p>
         </div>
 
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-    <a class="botao" th:href="@{/usuarios/novo}">
-        + Novo usuário
-    </a>
+        <div class="botoes-cabecalho">
+            <a class="botao" th:href="@{/usuarios/novo}">
+                + Novo usuário
+            </a>
 
-    <a class="botao" th:href="@{/}">
-        Voltar ao painel
-    </a>
-</div>
+            <a class="botao" th:href="@{/}">
+                Voltar ao painel
+            </a>
+        </div>
     </header>
 
     <section class="painel">
-        <div th:if="${sucesso}"
-     style="background: #dcfce7; color: #166534;
-            padding: 12px; border-radius: 7px; margin-bottom: 16px;"
-     th:text="${sucesso}">
-</div>
 
-<div th:if="${erro}"
-     style="background: #fee2e2; color: #991b1b;
-            padding: 12px; border-radius: 7px; margin-bottom: 16px;"
-     th:text="${erro}">
-</div>
+        <div th:if="${sucesso}"
+             class="mensagem mensagem-sucesso"
+             th:text="${sucesso}">
+        </div>
+
+        <div th:if="${erro}"
+             class="mensagem mensagem-erro"
+             th:text="${erro}">
+        </div>
+
         <table th:if="${not #lists.isEmpty(usuarios)}">
             <thead>
             <tr>
@@ -166,14 +59,20 @@
             <tbody>
             <tr th:each="usuario : ${usuarios}">
                 <td th:text="${usuario.id}">1</td>
+
                 <td th:text="${usuario.nome}">Nome</td>
-                <td th:text="${usuario.email}">email@exemplo.com</td>
+
+                <td th:text="${usuario.email}">
+                    email@exemplo.com
+                </td>
+
                 <td>
                     <span th:each="perfil, iteracao : ${usuario.perfis}">
                         <span th:text="${perfil.nome}">USUARIO</span><span
                             th:if="${not iteracao.last}">, </span>
                     </span>
                 </td>
+
                 <td>
                     <span class="situacao"
                           th:classappend="${usuario.ativo} ? ' ativo' : ' inativo'"
@@ -181,6 +80,7 @@
                         Ativo
                     </span>
                 </td>
+
                 <td th:text="${usuario.emailVerificado} ? 'Sim' : 'Não'">
                     Sim
                 </td>
@@ -191,6 +91,7 @@
         <p class="vazio" th:if="${#lists.isEmpty(usuarios)}">
             Nenhum usuário cadastrado.
         </p>
+
     </section>
 </main>
 </body>

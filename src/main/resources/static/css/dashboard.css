@@ -1,153 +1,243 @@
-        * {
-            box-sizing: border-box;
-        }
 
-        :root {
-            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-            color: #172033;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            background: #f3f6fb;
-        }
+:root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #172033;
+}
 
-        header {
-            background: #123b70;
-            color: white;
-            padding: 22px max(20px, calc((100% - 1100px) / 2));
-        }
+body {
+    margin: 0;
+    background: #f3f6fb;
+}
 
-        header strong {
-            font-size: 1.2rem;
-        }
+header {
+    background: #123b70;
+    color: white;
+    padding: 22px max(20px, calc((100% - 1100px) / 2));
+}
 
-        main {
-            max-width: 1100px;
-            margin: 32px auto;
-            padding: 0 20px;
-        }
+header strong {
+    font-size: 1.2rem;
+}
 
-        .cabecalho {
-            margin-bottom: 26px;
-        }
+main {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
 
-        .cabecalho h1 {
-            margin: 0 0 8px;
-            font-size: clamp(1.6rem, 4vw, 2.2rem);
-        }
+.cabecalho {
+    margin-bottom: 26px;
+}
 
-        .muted {
-            color: #64748b;
-            margin: 0;
-        }
+.cabecalho h1 {
+    margin: 0 0 8px;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
 
-        
-        .grade {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 20px;
-            align-items: stretch;
-        }
+.muted {
+    color: #64748b;
+    margin: 0;
+}
 
-        .cartao {
-            background: white;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 4px 18px #15294b12;
-            border: 1px solid #e5eaf2;
-            min-width: 0;
-            box-sizing: border-box;
-        }
+.grade {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
 
-        .grafico-status {
-            grid-column: span 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+.cartao {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 4px 18px #15294b12;
+    border: 1px solid #e5eaf2;
+    min-width: 0;
+    box-sizing: border-box;
+}
 
-        .secao {
-            margin-top: 26px;
-        }
+.grafico-status {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        .secao h2 {
-            font-size: 1.2rem;
-            margin-top: 0;
-        }
+.secao {
+    margin-top: 26px;
+}
 
-        .atalho {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+.secao h2 {
+    font-size: 1.2rem;
+    margin-top: 0;
+}
 
-        @media (max-width: 1000px) {
-            .grade {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+.atalho {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
 
-            .grafico-status {
-                grid-column: span 2;
-            }
-        }
+.rotulo {
+    color: #64748b;
+    font-size: .95rem;
+    font-weight: 600;
+}
 
-        @media (max-width: 560px) {
-            .grade {
-                grid-template-columns: 1fr;
-            }
+.numero {
+    color: #123b70;
+    font-size: 2.8rem;
+    font-weight: 750;
+    margin: 14px 0;
+    line-height: 1.2;
+}
 
-            .grafico-status {
-                grid-column: span 1;
-            }
-        }
+.descricao {
+    color: #64748b;
+    font-size: .9rem;
+    margin-bottom: 20px;
+}
 
+.botao {
+    display: inline-block;
+    background: #1557a6;
+    color: white;
+    text-decoration: none;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
 
-        .rotulo {
-            color: #64748b;
-            font-size: .95rem;
-            font-weight: 600;
-        }
+.botao:hover {
+    background: #0e417f;
+}
 
-        .numero {
-            color: #123b70;
-            font-size: 2.8rem;
-            font-weight: 750;
-            margin: 14px 0;
-            line-height: 1.2;
-        }
+/* Gráfico de equipamentos por status */
 
-        .descricao {
-            color: #64748b;
-            font-size: .9rem;
-            margin-bottom: 20px;
-        }
+.texto-grafico {
+    margin-bottom: 24px;
+}
 
-        .botao {
-            display: inline-block;
-            background: #1557a6;
-            color: white;
-            text-decoration: none;
-            padding: 11px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
+.grafico-status-conteudo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+}
 
-        .botao:hover {
-            background: #0e417f;
-        }
+.grafico-circular {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .secao {
-            margin-top: 26px;
-        }
+.grafico-circular-centro {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-        .secao h2 {
-            font-size: 1.2rem;
-            margin-top: 0;
-        }
+.grafico-circular-centro strong {
+    font-size: 1.8rem;
+}
 
-        .atalho {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+.grafico-circular-centro span {
+    font-size: .8rem;
+    color: #64748b;
+}
+
+.legenda-grafico {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.item-legenda {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.indicador-legenda {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+}
+
+.indicador-ativo {
+    background: #16803d;
+}
+
+.indicador-inativo {
+    background: #d97706;
+}
+
+/* Equipamentos por localidade */
+
+.texto-localidade {
+    margin-bottom: 24px;
+}
+
+.lista-localidades {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.localidade-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 7px;
+}
+
+.barra-localidade {
+    height: 12px;
+    background: #e5eaf2;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.barra-localidade-preenchimento {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 999px;
+    width: 0%;
+}
+
+.botao-consultar-localidade {
+    margin-top: 24px;
+}
+
+@media (max-width: 1000px) {
+    .grade {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grafico-status {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 560px) {
+    .grade {
+        grid-template-columns: 1fr;
+    }
+
+    .grafico-status {
+        grid-column: span 1;
+    }
+}
