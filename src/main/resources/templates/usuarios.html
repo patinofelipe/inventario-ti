@@ -7,9 +7,14 @@
     <title>Usuários - Inventário TI</title>
 
     <link rel="stylesheet" th:href="@{/css/usuarios.css}">
+    <link rel="stylesheet" th:href="@{/css/cabecalho.css}">
 </head>
 
 <body>
+<div class="barra-container">
+    <div th:replace="~{fragments/cabecalho :: cabecalho}"></div>
+</div>
+
 <main class="container">
 
     <header class="cabecalho">
@@ -26,9 +31,6 @@
                 + Novo usuário
             </a>
 
-            <a class="botao" th:href="@{/}">
-                Voltar ao painel
-            </a>
         </div>
     </header>
 

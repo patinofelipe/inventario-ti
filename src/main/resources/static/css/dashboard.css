@@ -10,17 +10,14 @@
 
 body {
     margin: 0;
+    padding: 24px;
     background: #f3f6fb;
 }
 
-header {
-    background: #123b70;
-    color: white;
-    padding: 22px max(20px, calc((100% - 1100px) / 2));
-}
-
-header strong {
-    font-size: 1.2rem;
+.container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
 }
 
 main {
@@ -233,6 +230,10 @@ main {
 }
 
 @media (max-width: 560px) {
+    body {
+        padding: 12px;
+    }
+
     .grade {
         grid-template-columns: 1fr;
     }

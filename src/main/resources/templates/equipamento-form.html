@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Novo equipamento | Inventário TI</title>
     <link rel="stylesheet" th:href="@{/css/equipamento-form.css}">
+    <link rel="stylesheet" th:href="@{/css/cabecalho.css}">
 </head>
 <body>
-<header>
-    <h1>Inventário TI</h1>
-    <p>Cadastro de equipamento</p>
-</header>
+<div class="barra-container">
+    <div th:replace="~{fragments/cabecalho :: cabecalho}"></div>
+</div>
 
-<main>
-   <form th:action="${modoEdicao}
+<main class="container">
+   <form class="painel-formulario" th:action="${modoEdicao}
         ? @{/equipamentos/{id}/atualizar(id=${idEdicao})}
         : @{/equipamentos/salvar}"
       th:object="${equipamento}"

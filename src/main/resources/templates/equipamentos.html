@@ -7,10 +7,13 @@
     <title>Equipamentos | Inventário TI</title>
 
     <link rel="stylesheet" th:href="@{/css/equipamentos.css}">
+    <link rel="stylesheet" th:href="@{/css/cabecalho.css}">
 </head>
 
 <body>
 <div class="container">
+
+    <div th:replace="~{fragments/cabecalho :: cabecalho}"></div>
 
     <header class="cabecalho">
         <div>

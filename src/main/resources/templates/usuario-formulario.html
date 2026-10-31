@@ -7,9 +7,14 @@
     <title>Novo usuário - Inventário TI</title>
 
     <link rel="stylesheet" th:href="@{/css/usuario-formulario.css}">
+    <link rel="stylesheet" th:href="@{/css/cabecalho.css}">
 </head>
 
 <body>
+<div class="barra-container">
+    <div th:replace="~{fragments/cabecalho :: cabecalho}"></div>
+</div>
+
 <main class="container">
 
     <section class="painel">
